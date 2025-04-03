@@ -60,7 +60,7 @@ func main() {
 	router.Use(gin.Recovery())
 
 	// Apply WAF middleware
-	router.Use(middleware.ModSecurityMiddleware(rulesetPath, errorPagePath403, errorPagePath500))
+	router.Use(brandy.Waf(rulesetPath, errorPagePath403, errorPagePath500))
 
 	// Define routes
 	router.GET("/", func(c *gin.Context) {
