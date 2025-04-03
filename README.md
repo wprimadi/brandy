@@ -19,7 +19,7 @@ Brandy (Blocking Request Anomalies & Network Defense Yielder) a middleware for G
 ✅ Compatible with standard middleware practices in Gin.  
 
 ## Installation
-```sh
+```go
 go get -u github.com/wprimadi/brandy
 ```
 
@@ -30,9 +30,21 @@ go get -u github.com/wprimadi/brandy
 Create a `main.go` file and use the middleware:
 
 ```go
+package main
+
+import (
+	"log"
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/wprimadi/brandy"
+)
+
 func main() {
 	// Define WAF configuration
-	rulesetPath := "rules/ruleset.conf" // Ruleset file
+	rulesetPaths := []string{
+		"rulesets/default.conf",
+		"rulesets/owasp-crs/rules/*.conf",
+	}
 	errorPagePath403 := "" // Custom 403 error page
 	errorPagePath500 := "" // Custom 500 error page
 
@@ -60,3 +72,7 @@ func main() {
 	}
 }
 ```
+
+## License
+
+This project is open-source and available under the MIT License.

@@ -16,10 +16,25 @@ import (
 
 // Waf returns a Gin middleware that implements Coraza WAF.
 // This middleware performs request filtering based on the ruleset defined in the Coraza WAF.
-func Waf(rulesetPath, errorPagePath403, errorPagePath500 string) gin.HandlerFunc {
+func Waf(rulesetPaths []string, errorPagePath403, errorPagePath500 string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Initialize the WAF engine with a set of security rules.
-		waf, err := coraza.NewWAF(coraza.NewWAFConfig().WithErrorCallback(logError).WithDirectivesFromFile(rulesetPath))
+		wafConfig := coraza.NewWAFConfig().WithErrorCallback(logError)
+
+		// Load rulesets based on provided file paths.
+		for _, path := range rulesetPaths {
+			err := wafConfig.WithDirectivesFromFile(path)
+			if err != nil {
+				// Log the error and return a response if the rule file cannot be loaded.
+				logErrorToConsole(fmt.Sprintf("Failed to load rule file: %v", err))
+				handleErrorAction(c, http.StatusInternalServerError, errorPagePath500, errors.New("failed to load rule file"))
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
+		}
+
+		// Initialize WAF with loaded rulesets.
+		waf, err := coraza.NewWAF(wafConfig)
 		if err != nil {
 			// Log the error and return a response to indicate failure to initialize the WAF.
 			logErrorToConsole(fmt.Sprintf("Failed to initialize Coraza WAF engine: %v", err))
