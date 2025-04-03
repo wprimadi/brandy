@@ -16,7 +16,7 @@ import (
 
 // Waf returns a Gin middleware that implements Coraza WAF.
 // This middleware performs request filtering based on the ruleset defined in the Coraza WAF.
-func Waf(rulesetPath, logPath, errorPagePath403, errorPagePath500 string) gin.HandlerFunc {
+func Waf(rulesetPath, errorPagePath403, errorPagePath500 string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Initialize the WAF engine with a set of security rules.
 		waf, err := coraza.NewWAF(coraza.NewWAFConfig().WithErrorCallback(logError).WithDirectivesFromFile(rulesetPath))
