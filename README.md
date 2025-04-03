@@ -20,7 +20,13 @@ Brandy (Blocking Request Anomalies & Network Defense Yielder) a middleware for G
 
 ## Installation
 ```go
-go get -u github.com/wprimadi/brandy
+go get -u github.com/wprimadi/brandy@v1.0.0
+```
+
+or
+
+```go
+go get -u github.com/wprimadi/brandy@latest
 ```
 
 ## Usage
